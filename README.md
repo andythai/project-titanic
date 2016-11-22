@@ -1,1 +1,3 @@
-# CSE167-final
+# cse167-final
+Andy Thai
+Tian Yang
