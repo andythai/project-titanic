@@ -1,12 +1,19 @@
 #include "window.h"
 
-const char* window_title = "GLFW Starter Project";
-Cube * cube;
-GLint shaderProgram;
+const char* window_title = "Project Titanic";
+
+// INITIALIZATIONS
+GLint shaderProgram, skybox_shaderProgram, toon_shaderProgram;
+Skybox * skybox;
+OBJObject * model;
 
 // On some systems you need to change this to the absolute path
 #define VERTEX_SHADER_PATH "../shader.vert"
 #define FRAGMENT_SHADER_PATH "../shader.frag"
+#define SKYBOX_VERTEX_SHADER_PATH "../skybox.vert"
+#define SKYBOX_FRAGMENT_SHADER_PATH "../skybox.frag"
+#define TOON_VERTEX_SHADER_PATH "../toonshader.vert"
+#define TOON_FRAGMENT_SHADER_PATH "../toonshader.frag"
 
 // Default camera parameters
 glm::vec3 cam_pos(0.0f, 0.0f, 20.0f);		// e  | Position of camera
@@ -21,17 +28,30 @@ glm::mat4 Window::V;
 
 void Window::initialize_objects()
 {
-	cube = new Cube();
+	// Custom initializations
+	skybox = new Skybox();
+	skybox->loadCubemap();
 
-	// Load the shader program. Make sure you have the correct filepath up top
+	model = new OBJObject("bunny.obj");
+	model->scale(6.0f); // Temporary
+
+	// Load the shader programs. Make sure you have the correct filepath up top
 	shaderProgram = LoadShaders(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH);
+	skybox_shaderProgram = LoadShaders(SKYBOX_VERTEX_SHADER_PATH, SKYBOX_FRAGMENT_SHADER_PATH);
+	toon_shaderProgram = LoadShaders(TOON_VERTEX_SHADER_PATH, TOON_FRAGMENT_SHADER_PATH);
 }
 
 // Treat this as a destructor function. Delete dynamically allocated memory here.
 void Window::clean_up()
 {
-	delete(cube);
+	delete(skybox);
+
+	delete(model);
+
+	// Delete shaders
 	glDeleteProgram(shaderProgram);
+	glDeleteProgram(skybox_shaderProgram);
+	glDeleteProgram(toon_shaderProgram);
 }
 
 GLFWwindow* Window::create_window(int width, int height)
@@ -97,8 +117,8 @@ void Window::resize_callback(GLFWwindow* window, int width, int height)
 
 void Window::idle_callback()
 {
-	// Call the update function the cube
-	cube->update();
+	// Call the update function the model
+	model->update();
 }
 
 void Window::display_callback(GLFWwindow* window)
@@ -106,11 +126,17 @@ void Window::display_callback(GLFWwindow* window)
 	// Clear the color and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	/** SKYBOX START **/
+	glUseProgram(skybox_shaderProgram);
+	skybox->draw(skybox_shaderProgram);
+	/** SKYBOX END **/
+
 	// Use the shader of programID
-	glUseProgram(shaderProgram);
+	glUseProgram(toon_shaderProgram);
 	
-	// Render the cube
-	cube->draw(shaderProgram);
+	// Render the model
+	skybox->sendLight(toon_shaderProgram);
+	model->draw(toon_shaderProgram);
 
 	// Gets events, including input such as keyboard and mouse or window resizing
 	glfwPollEvents();

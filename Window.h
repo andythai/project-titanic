@@ -13,6 +13,10 @@
 #include "Cube.h"
 #include "shader.h"
 
+// Include
+#include "GLFWStarterProject/Skybox.h"
+#include "GLFWStarterProject/OBJObject.h"
+
 class Window
 {
 public:
