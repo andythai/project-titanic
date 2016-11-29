@@ -31,7 +31,7 @@ out vec4 color;
 
 void main()
 {
-	if (on == 1) { // Use toon shading or not
+	if (on == 0) { // Toon shading toggle
 		vec3 norm = normalize(Normal);
 		vec3 l = normalize(dirLight.direction);
 		float e_x = -view[3][0];
