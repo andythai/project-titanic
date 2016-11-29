@@ -37,7 +37,7 @@ void main()
 		float e_x = -view[3][0];
 		float e_y = -view[3][1];
 		float e_z = -view[3][2];
-		vec3 viewPos = {e_x, e_y, e_z};
+		vec3 viewPos = vec3(e_x, e_y, e_z);
 		vec3 viewDir = normalize(viewPos - FragPos);
 		vec3 result = material.ambient;
 		
