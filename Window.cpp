@@ -6,6 +6,7 @@ const char* window_title = "Project Titanic";
 GLint shaderProgram, skybox_shaderProgram, toon_shaderProgram;
 Skybox * skybox;
 OBJObject * model;
+Audio * sound;
 
 // On some systems you need to change this to the absolute path
 #define VERTEX_SHADER_PATH "../shader.vert"
@@ -34,6 +35,8 @@ void Window::initialize_objects()
 
 	model = new OBJObject("bunny.obj");
 	model->scale(6.0f); // Temporary
+
+	sound = new Audio("boxing_bell_multiple.wav");
 
 	// Load the shader programs. Make sure you have the correct filepath up top
 	shaderProgram = LoadShaders(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH);
