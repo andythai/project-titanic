@@ -16,6 +16,7 @@
 // Include
 #include "GLFWStarterProject/Skybox.h"
 #include "GLFWStarterProject/OBJObject.h"
+#include "GLFWStarterProject/Audio.h"
 
 class Window
 {
