@@ -36,6 +36,9 @@
     <ClInclude Include="Audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">
@@ -59,14 +62,17 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\shader.frag">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\shader.vert">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="packages.config" />
+    <None Include="..\bounds_shader.frag">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\bounds_shader.vert">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
