@@ -3,14 +3,19 @@
 const char* window_title = "Project Titanic";
 
 // INITIALIZATIONS
-GLint shaderProgram, skybox_shaderProgram, toon_shaderProgram;
+GLint bounds_shaderProgram, skybox_shaderProgram, toon_shaderProgram;
 Skybox * skybox;
 OBJObject * model;
 Audio * sound;
+Bound * test;
+Bound * test2;
+
+// TOGGLE VARIABLES
+bool TOGGLE_BOUNDING_BOXES = true;
 
 // On some systems you need to change this to the absolute path
-#define VERTEX_SHADER_PATH "../shader.vert"
-#define FRAGMENT_SHADER_PATH "../shader.frag"
+#define BOUNDS_VERTEX_SHADER_PATH "../bounds_shader.vert"
+#define BOUNDS_FRAGMENT_SHADER_PATH "../bounds_shader.frag"
 #define SKYBOX_VERTEX_SHADER_PATH "../skybox.vert"
 #define SKYBOX_FRAGMENT_SHADER_PATH "../skybox.frag"
 #define TOON_VERTEX_SHADER_PATH "../toonshader.vert"
@@ -36,10 +41,15 @@ void Window::initialize_objects()
 	model = new OBJObject("bunny.obj");
 	model->scale(6.0f); // Temporary
 
+	test = new Bound();
+	test2 = new Bound();
+	test2->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(7.0f, 0.0f, 0.0f)) * test2->toWorld;
+	test2->update();
+
 	sound = new Audio("boxing_bell_multiple.wav");
 
 	// Load the shader programs. Make sure you have the correct filepath up top
-	shaderProgram = LoadShaders(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH);
+	bounds_shaderProgram = LoadShaders(BOUNDS_VERTEX_SHADER_PATH, BOUNDS_FRAGMENT_SHADER_PATH);
 	skybox_shaderProgram = LoadShaders(SKYBOX_VERTEX_SHADER_PATH, SKYBOX_FRAGMENT_SHADER_PATH);
 	toon_shaderProgram = LoadShaders(TOON_VERTEX_SHADER_PATH, TOON_FRAGMENT_SHADER_PATH);
 }
@@ -51,8 +61,13 @@ void Window::clean_up()
 
 	delete(model);
 
+	delete(sound);
+
+	delete(test);
+	//delete(test2);
+
 	// Delete shaders
-	glDeleteProgram(shaderProgram);
+	glDeleteProgram(bounds_shaderProgram);
 	glDeleteProgram(skybox_shaderProgram);
 	glDeleteProgram(toon_shaderProgram);
 }
@@ -121,7 +136,8 @@ void Window::resize_callback(GLFWwindow* window, int width, int height)
 void Window::idle_callback()
 {
 	// Call the update function the model
-	model->update();
+	//test->update();
+	//test->check_collision(*test2);
 }
 
 void Window::display_callback(GLFWwindow* window)
@@ -134,12 +150,21 @@ void Window::display_callback(GLFWwindow* window)
 	skybox->draw(skybox_shaderProgram);
 	/** SKYBOX END **/
 
-	// Use the shader of programID
+	/** TOON SHADING **/
 	glUseProgram(toon_shaderProgram);
-	
-	// Render the model
 	skybox->sendLight(toon_shaderProgram);
-	model->draw(toon_shaderProgram);
+	//model->draw(toon_shaderProgram);
+
+	/** RENDER BOUNDING BOXES **/
+	
+	if (TOGGLE_BOUNDING_BOXES) {
+		glUseProgram(bounds_shaderProgram);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		test->check_collision(test2);
+		test->draw(bounds_shaderProgram);
+		test2->draw(bounds_shaderProgram);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
 	// Gets events, including input such as keyboard and mouse or window resizing
 	glfwPollEvents();
@@ -157,6 +182,44 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
 		{
 			// Close the window. This causes the program to also terminate.
 			glfwSetWindowShouldClose(window, GL_TRUE);
+		}
+		else if (key == GLFW_KEY_B) {
+			if (TOGGLE_BOUNDING_BOXES == true) {
+				TOGGLE_BOUNDING_BOXES = false;
+			}
+			else {
+				TOGGLE_BOUNDING_BOXES = true;
+			}
+		}
+		else if (key == GLFW_KEY_X) {
+			if (mods == GLFW_MOD_SHIFT) {
+				test->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * test->toWorld;
+				test->update();
+			}
+			else {
+				test->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, 0.0f, 0.0f)) * test->toWorld;
+				test->update();
+			}
+		}
+		else if (key == GLFW_KEY_Y) {
+			if (mods == GLFW_MOD_SHIFT) {
+				test->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.0f, 0.0f)) * test->toWorld;
+				test->update();
+			}
+			else {
+				test->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f)) * test->toWorld;
+				test->update();
+			}
+		}
+		else if (key == GLFW_KEY_Z) {
+			if (mods == GLFW_MOD_SHIFT) {
+				test->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * test->toWorld;
+				test->update();
+			}
+			else {
+				test->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f)) * test->toWorld;
+				test->update();
+			}
 		}
 	}
 }

@@ -17,6 +17,7 @@
 #include "GLFWStarterProject/Skybox.h"
 #include "GLFWStarterProject/OBJObject.h"
 #include "GLFWStarterProject/Audio.h"
+#include "GLFWStarterProject/Bound.h"
 
 class Window
 {
