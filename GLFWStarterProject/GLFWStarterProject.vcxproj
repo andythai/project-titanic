@@ -24,6 +24,7 @@
     <ClInclude Include="..\shader.h" />
     <ClInclude Include="..\Window.h" />
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="Bound.h" />
     <ClInclude Include="OBJObject.h" />
     <ClInclude Include="Skybox.h" />
   </ItemGroup>
@@ -33,12 +34,13 @@
     <ClCompile Include="..\shader.cpp" />
     <ClCompile Include="..\Window.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Bound.cpp" />
     <ClCompile Include="OBJObject.cpp" />
     <ClCompile Include="Skybox.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\shader.frag" />
-    <None Include="..\shader.vert" />
+    <None Include="..\bounds_shader.frag" />
+    <None Include="..\bounds_shader.vert" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
