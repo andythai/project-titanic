@@ -23,34 +23,38 @@
 #include <vector>
 #include <string>
 
-static const int MAPSIZE = 256 + 1; // must be 2^n + 1
-static const float SIZE_X = 80.0;
-static const float SIZE_Z = 80.0;
-static const float DS_RANGE = 10;
-
 class Terrain {
 public:
     glm::mat4 toWorld = glm::mat4(1.0f);
-    float heightMap[MAPSIZE][MAPSIZE];
+    int mapSize = 256 + 1; // must be 2^n + 1
+    float dispSizeX = 80.0;
+    float dispSizeZ = 80.0;
+    int terrainType = 1;
+    int lBound = -10;
+    int uBound = 10;
+
+    std::vector<std::vector<int>> heightMap;
     std::vector<unsigned int> indices;
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
-    // std::vector<unsigned int> triangle;
-    // bool isUpperLeftTriangle = true;
-    
+
     unsigned char* texture;
     GLuint HMVAO, HMVBO, IDVBO, NBO;
     GLuint uProjection, uModelview;
-    
+    // GLuint textureID;
+    // GLuint uNormalToggle;
+
     Terrain();
+    Terrain(int type);
     ~Terrain();
     void init();
-    void diamondSquare(int minX, int minY, int maxX, int maxY, float range);
+    void diamondSquare(int minX, int minY, int maxX, int maxY, float lowerBound, float upperBound);
+    void adjust();
     void generateVertices();
     void generateIndices();
     void calcNormals();
     void draw(GLuint shaderProgram);
-    
+
     unsigned char* loadPPM(const char* filename, int& width, int& height);
 };
 
