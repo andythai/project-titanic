@@ -4,6 +4,9 @@ Andy Thai<br>
 Tian Yang<br>
 Yunbo Chen<br>
 <br>
+<b>Description:</b><br>
+Project Titanic is a ship simulator game / program where a player controls a ship on water and attempts to avoid collision with terrain, while trying to pick up as many buoys as possible.<br>
+<br>
 <b>Links:</b><br>
 Project Blog URL: http://cse167project.blogspot.com/<br>
 Demo video: https://www.youtube.com/watch?v=E_oUR8v9Y5A<br>
@@ -15,3 +18,9 @@ Demo video: https://www.youtube.com/watch?v=E_oUR8v9Y5A<br>
 • Sound Effects<br>
 • Water Effects<br>
 • Particle Effects<br>
+<br>
+<b>Screenshots:</b><br>
+![Bounding Boxes](https://4.bp.blogspot.com/-FFn-X6n-bLs/WEj3Hff8BuI/AAAAAAAAAWk/vlJCHyuSYyc0unVYJhZXwRKDJId-hJdHwCK4B/s320/SS1.png)
+![Procedural Terrain](https://1.bp.blogspot.com/-fGv0s3hoRAc/WEj3ImxYnTI/AAAAAAAAAWs/VyURO6RBYxoEZE3UgspIpE5LjibGfptJACK4B/s320/SS2.png)<br>
+![General View](https://1.bp.blogspot.com/-tMkcQD7dK7g/WEj3LDcyabI/AAAAAAAAAW0/jBIUjxemWmUHdeDS02KiqYkKDTg9c7xeQCK4B/s320/SS3.png)
+![Procedural generation early example](https://3.bp.blogspot.com/-UUEkjyGWh6E/WEPB8XycaZI/AAAAAAAAAVY/-J8rTl1Vj546hKjVfIbk6FLHOd2A0wziQCK4B/s320/procedural_t.png)<br>
