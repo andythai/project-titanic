@@ -1,4 +1,5 @@
 #version 330 core
+// Andy Thai
 // NOTE: Do NOT use any version older than 330! Bad things will happen!
 
 // This is an example vertex shader. GLSL is very similar to C.
@@ -11,7 +12,7 @@ layout (location = 1) in vec3 normal;
 
 // Uniform variables can be updated by fetching their location and passing values to that location
 uniform mat4 projection;
-uniform mat4 modelview;
+//uniform mat4 modelview;
 uniform mat4 model;
 uniform mat4 view;
 

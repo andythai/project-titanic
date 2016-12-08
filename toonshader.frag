@@ -20,6 +20,8 @@ uniform DirLight dirLight;
 uniform int on;
 uniform Material material;
 uniform mat4 view;
+uniform vec3 cam_pos;
+uniform vec3 cam_look_at;
 
 // Inputs to the fragment shader are the outputs of the same name from the vertex shader.
 // Note that you do not have access to the vertex shader's default output, gl_Position.
@@ -34,36 +36,41 @@ void main()
 	if (on == 0) { // Toon shading toggle
 		vec3 norm = normalize(Normal);
 		vec3 l = normalize(dirLight.direction);
+		/*
 		float e_x = -view[3][0];
 		float e_y = -view[3][1];
 		float e_z = -view[3][2];
-		vec3 viewPos = vec3(e_x, e_y, e_z);
-		vec3 viewDir = normalize(viewPos - FragPos);
+		*/
+		//vec3 viewPos = vec3(cam_pos.x, cam_pos.y, cam_pos.z);
+		//vec3 viewDir = normalize(viewPos - FragPos);
+		vec3 viewDir = normalize(FragPos - cam_pos);
 		vec3 result = material.ambient;
 		
 		// Diffuse switch
 		float diffuse = max(0.0f, dot(norm, l));
 		if (diffuse > 0.75f) {
-			// Do nothing
+			result = result * 0.9f;
 		}
 		else if (diffuse > 0.5f) {
-			result = result * 0.6f;
+			result = result * 0.8f; // 0.6
 		}
 		else if (diffuse > 0.25f) {
-			result = result * 0.4f;
+			result = result * 0.7f; // 0.4
 		}
 		else {
-			result = result * 0.3f;
+			result = result * 0.6f; // 0.3
 		}
 		
 
 		// Edge silhouette
+		/*
 		float edge = max(0.0f, dot(norm, viewDir));
 		if (edge < 0.01f) {
 			result.r = 0.0f;
 			result.g = 0.0f;
 			result.b = 0.0f; 
 		}
+		*/
 
 		// Output
 		color = vec4(result.r, result.g, result.b, 1.0f);
