@@ -1,4 +1,4 @@
-# Project Titanic
+# PROJECT TITANIC
 <b>Contributors:</b><br>
 Andy Thai<br>
 Tian Yang<br>
