@@ -1,3 +1,7 @@
+/****************************/
+/*****	by ANDY THAI	*****/
+/****************************/
+
 #define _CRT_SECURE_NO_DEPRECATE
 #include "Skybox.h"
 #include "../Window.h"
@@ -59,6 +63,24 @@ void Skybox::initialize() {
 
 					 // We've sent the vertex data over to OpenGL, but there's still something missing.
 					 // In what order should it draw those vertices? That's why we'll need a GL_ELEMENT_ARRAY_BUFFER for this.
+
+	glBindBuffer(GL_ARRAY_BUFFER, NBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(normals), &normals, GL_STATIC_DRAW);
+
+	// Enable the usage of layout location 1 (check the vertex shader to see what this is)
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(1,// This first parameter x should be the same as the number passed into the line "layout (location = x)" in the vertex shader.
+		3, // This second line tells us how any components there are per vertex. In this case, it's 3 (we have an x, y, and z component)
+		GL_FLOAT, // What type these components are
+		GL_FALSE, // GL_TRUE means the values should be normalized. GL_FALSE means they shouldn't
+		3 * sizeof(GLfloat), // Offset between consecutive indices. Since each of our vertices have 3 floats, they should have the size of 3 floats in between
+		(GLvoid*)0); // Offset of the first vertex's component. In our case it's 0 since we don't pad the vertices array with anything.
+
+					 // We've sent the vertex data over to OpenGL, but there's still something missing.
+					 // In what order should it draw those vertices? That's why we'll need a GL_ELEMENT_ARRAY_BUFFER for this.
+
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(skybox_indices), skybox_indices, GL_STATIC_DRAW);
 	// Unbind the currently bound buffer so that we don't accidentally make unwanted changes to it.
@@ -85,31 +107,31 @@ GLuint Skybox::loadCubemap() {
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	// Load front
-	image = loadPPM("skybox/front.ppm", width, height);
+	image = loadPPM("assets/skybox/front.ppm", width, height);
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	//glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 	// Load back
-	image = loadPPM("skybox/back.ppm", width, height);
+	image = loadPPM("assets/skybox/back.ppm", width, height);
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	//glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 	// Load bottom
-	image = loadPPM("skybox/bottom.ppm", width, height);
+	image = loadPPM("assets/skybox/bottom.ppm", width, height);
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 	// Load left
-	image = loadPPM("skybox/left.ppm", width, height);
+	image = loadPPM("assets/skybox/left.ppm", width, height);
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	//glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 	// Load right
-	image = loadPPM("skybox/right.ppm", width, height);
+	image = loadPPM("assets/skybox/right.ppm", width, height);
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	//glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 	// Load top
-	image = loadPPM("skybox/top.ppm", width, height);
+	image = loadPPM("assets/skybox/top.ppm", width, height);
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 	// Sets texture parameters
@@ -128,7 +150,7 @@ GLuint Skybox::loadCubemap() {
 // Skybox is source of directional light
 void Skybox::sendLight(GLuint shaderProgram) {
 	// Change directional light settings here
-	glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.direction"), -0.0459845f, 0.0925645f, 0.994644f);
+	glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.direction"), direction.x, direction.y, direction.z); // -0.0459845f, 0.0925645f, 0.994644f
 	glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.ambient"), 0.8f, 0.8f, 0.9f);
 	glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.diffuse"), 0.7f, 0.42f, 0.46f);
 	glUniform3f(glGetUniformLocation(shaderProgram, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
@@ -154,10 +176,12 @@ void Skybox::draw(GLuint shaderProgram)
 	// Get the location of the uniform variables "projection" and "modelview"
 	uProjection = glGetUniformLocation(shaderProgram, "projection");
 	uView = glGetUniformLocation(shaderProgram, "view");
+	uModel = glGetUniformLocation(shaderProgram, "model");
 
 	// Now send these values to the shader program
 	glUniformMatrix4fv(uProjection, 1, GL_FALSE, &Window::P[0][0]);
 	glUniformMatrix4fv(uView, 1, GL_FALSE, &view[0][0]);
+	glUniformMatrix4fv(uModel, 1, GL_FALSE, &toWorld[0][0]);
 
 	// Now draw the cube. We simply need to bind the VAO associated with it.
 	glBindVertexArray(VAO);

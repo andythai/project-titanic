@@ -1,3 +1,7 @@
+/****************************/
+/*****	by ANDY THAI	*****/
+/****************************/
+
 #ifndef _BOUND_H_
 #define _BOUND_H_
 
@@ -21,6 +25,7 @@ class Bound
 {
 public:
 	Bound();
+	Bound(float x, float y, float z);
 	~Bound();
 
 	glm::mat4 toWorld;

@@ -1,3 +1,7 @@
+/****************************/
+/*****	by ANDY THAI	*****/
+/****************************/
+
 #define _CRT_SECURE_NO_DEPRECATE
 #include "OBJObject.h"
 #include "../Window.h"
@@ -8,6 +12,8 @@ OBJObject::OBJObject()
 
 OBJObject::OBJObject(const char* filepath)
 {
+	bounding_box->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, -22.0f)) * this->toWorld;
+	bounding_box->update();
 	parse(filepath);
 	initialize();
 }
@@ -19,6 +25,7 @@ OBJObject::~OBJObject()
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
+	delete(bounding_box);
 }
 
 void OBJObject::initialize()
@@ -101,12 +108,14 @@ void OBJObject::parse(const char *filepath)
 
 
 	// Double parsing centering
+	/*
 	GLfloat min_x = FLT_MAX;
 	GLfloat max_x = -FLT_MAX;
 	GLfloat min_y = FLT_MAX;
 	GLfloat max_y = -FLT_MAX;
 	GLfloat min_z = FLT_MAX;
 	GLfloat max_z = -FLT_MAX;
+	*/
 
 	std::string line;
 
@@ -123,6 +132,7 @@ void OBJObject::parse(const char *filepath)
 			linestream >> z;
 			vertices.push_back(glm::vec3(x, y, z));
 
+			/*
 			if (x > max_x) {
 				max_x = x;
 			}
@@ -143,6 +153,7 @@ void OBJObject::parse(const char *filepath)
 			else if (z < min_z) {
 				min_z = z;
 			}
+			*/
 		}
 		else if (linetype == "vn") {
 			float x, y, z;  // normal vector
@@ -166,6 +177,7 @@ void OBJObject::parse(const char *filepath)
 		}
 	}
 
+	/*
 	GLfloat avg_x = (max_x - min_x) / 2;
 	GLfloat avg_y = (max_y - min_y) / 2;
 	GLfloat avg_z = (max_z - min_z) / 2;
@@ -185,7 +197,7 @@ void OBJObject::parse(const char *filepath)
 		vertices[i][1] = (vertices[i][1] - avg_y) / size;
 		vertices[i][2] = (vertices[i][2] - avg_z) / size;
 	}
-
+	*/
 	objfile.close();
 }
 
@@ -248,6 +260,8 @@ void OBJObject::translate(float x, float y, float z)
 		x, y, z, 1 };
 
 	this->toWorld = matrix * this->toWorld;
+	bounding_box->toWorld = matrix * bounding_box->toWorld;
+	bounding_box->update();
 }
 
 void OBJObject::origin()
@@ -377,4 +391,18 @@ void OBJObject::setShininess(int number)
 	else {
 		shininess = number;
 	}
+}
+
+bool OBJObject::checkBounds(Island * other) {
+	bool does_collide = false;
+	bool return_collide = false;
+	for (int i = 0; i < other->lands.size(); i++) {
+		for (int j = 0; j < other->lands[i]->bounds.size(); j++) {
+			does_collide = this->bounding_box->check_collision(other->lands[i]->bounds[j]);
+			if (does_collide == true) {
+				return_collide = true;
+			}
+		}
+	}
+	return return_collide;
 }

@@ -25,8 +25,12 @@
     <ClInclude Include="..\Window.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Bound.h" />
+    <ClInclude Include="Island.h" />
     <ClInclude Include="OBJObject.h" />
+    <ClInclude Include="Particles.h" />
     <ClInclude Include="Skybox.h" />
+    <ClInclude Include="Terrain.h" />
+    <ClInclude Include="Water.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Cube.cpp" />
@@ -35,12 +39,28 @@
     <ClCompile Include="..\Window.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Bound.cpp" />
+    <ClCompile Include="Island.cpp" />
     <ClCompile Include="OBJObject.cpp" />
+    <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bounds_shader.frag" />
     <None Include="..\bounds_shader.vert" />
+    <None Include="..\outline_shader.frag" />
+    <None Include="..\outline_shader.vert" />
+    <None Include="..\ParticleShader.frag" />
+    <None Include="..\ParticleShader.vert" />
+    <None Include="..\skybox.frag" />
+    <None Include="..\skybox.vert" />
+    <None Include="..\terrainShader.frag" />
+    <None Include="..\terrainShader.vert" />
+    <None Include="..\toonshader.frag" />
+    <None Include="..\toonshader.vert" />
+    <None Include="..\water_shader.frag" />
+    <None Include="..\water_shader.vert" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

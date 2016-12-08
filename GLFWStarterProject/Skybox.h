@@ -1,3 +1,7 @@
+/****************************/
+/*****	by ANDY THAI	*****/
+/****************************/
+
 #ifndef _SKYBOX_H_
 #define _SKYBOX_H_
 
@@ -31,9 +35,10 @@ public:
 	// Cubemap
 	GLuint loadCubemap();
 	GLuint textureID;
+	glm::vec3 direction = glm::vec3(-0.0459845f, 0.0925645f, 0.994644f);
 
 	// These variables are needed for the shader program
-	GLuint VBO, VAO, EBO;
+	GLuint VBO, VAO, NBO, EBO;
 	GLuint uProjection, uModelview, uModel, uView;
 
 	GLfloat vertices[8][3] = {
@@ -41,6 +46,12 @@ public:
 		{ -2.0, -2.0,  2.0 },{ 2.0, -2.0,  2.0 },{ 2.0,  2.0,  2.0 },{ -2.0,  2.0,  2.0 },
 		// "Back" vertices
 		{ -2.0, -2.0, -2.0 },{ 2.0, -2.0, -2.0 },{ 2.0,  2.0, -2.0 },{ -2.0,  2.0, -2.0 }
+	};
+
+	GLfloat normals[12][3] = {
+		{ 0.0, 0.0, 1.0 },{ 0.0, 0.0, 1.0 },{ 0.0, -1.0, 0.0 },{ 0.0, -1.0, 0.0 },
+		{ 0.0, 0.0, -1.0 },{ 0.0, 0.0, -1.0 },{ 0.0, 1.0, 0.0 },{ 0.0, 1.0, 0.0 },
+		{ 1.0, 0.0, 0.0 },{ 1.0, 0.0, 0.0 },{ -1.0, 0.0, 0.0 },{ -1.0, 0.0, 0.0 }
 	};
 };
 

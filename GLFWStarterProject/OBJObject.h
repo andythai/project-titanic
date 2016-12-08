@@ -1,3 +1,7 @@
+/****************************/
+/*****	by ANDY THAI	*****/
+/****************************/
+
 #ifndef _OBJOBJECT_H_
 #define _OBJOBJECT_H_
 
@@ -19,6 +23,8 @@
 #include <fstream> // std::ifstream
 #include <string> // std::string
 #include <sstream> // std::istringstream
+#include "Bound.h"
+#include "Island.h"
 
 class OBJObject
 {
@@ -31,22 +37,27 @@ public:
 	// toWorld vector
 	glm::mat4 toWorld;
 
+	bool toDraw = true;
+
 	// Containers
 	std::vector<GLuint> indices;
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
 
+	// Bounding box
+	Bound * bounding_box = new Bound(25.0f, 5.0f, 3.0f);
+
 	// Colors
-	glm::vec3 object_color = { 0.21f, 0.21f, 0.41f };
-	glm::vec3 diffuse = { 0.52f, 0.5f, 0.31f };
-	glm::vec3 specular = { 0.52f, 0.5f, 0.8f };
+	glm::vec3 object_color = { 0.75f, 0.75f, 0.95f };
+	glm::vec3 diffuse = { 0.52f, 0.5f, 0.51f };
+	glm::vec3 specular = { 0.52f, 0.5f, 0.5f };
 
 	// For specular
 	int shininess = 32;
 
 	void initialize();
 	void parse(const char* filepath);
-
+	bool checkBounds(Island*);
 	void draw(GLuint);
 	void update();
 	void spin(float);
