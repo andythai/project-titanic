@@ -1,4 +1,4 @@
-# cse167-final
+# project-titanic
 Andy Thai<br>
 Tian Yang<br>
 Yunbo Chen<br>
