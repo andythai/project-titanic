@@ -35,6 +35,7 @@ bool SHOW_OUTLINES = true;					// Press O to toggle silhouettes
 bool SHOW_WATER = true;						// Press L to hide/unhide water
 bool DEBUG = false;							// Use 0 to toggle invincibility, disables bounds collision game over condition
 bool SPRAY_PARTICLES = false;				// Press F to spray blue particle trails from the ship
+int TOON_SHADING = true;					// Press P to toggle discretized color shading
 
 // GAME OPTIONS (You may edit these!)
 const int ISLAND_NUM = 10;					// Default: 10
@@ -54,6 +55,7 @@ glm::vec3 STORED_CAM_POS;					// Store original camera position to recover it fo
 float STORED_SHIP_ANGLE;					// Store original ship angle to recover it for C
 Island * tutorial_island;					// Used to stop islands from being generated on top of the ship
 GLuint normal_toggle_var;					// Sends information to terrain shader for normals coloring		
+GLuint toon_toggle_var;						// Sends information to toon shader to toggle toon coloring		
 GLuint uCam_pos;							// Sends camera pos information to shader
 GLuint uCam_look_at;						// Sends camera look_at information to shader
 glm::vec3 lastPoint;						// Holds last point for mouse/cursor movement
@@ -266,6 +268,7 @@ void Window::initialize_objects()
 	std::cout << "    M - Regenerate map" << std::endl;
 	std::cout << "    , - Regenerate map into singular islands" << std::endl;
 	std::cout << "    G - Mute sound" << std::endl;
+	std::cout << "    P - Toggle toon coloring" << std::endl;
 }
 
 // Treat this as a destructor function. Delete dynamically allocated memory here.
@@ -527,6 +530,8 @@ void Window::display_callback(GLFWwindow* window)
 
 	/********** RENDER MODEL **********/
 	glUseProgram(toon_shaderProgram);
+	toon_toggle_var = glGetUniformLocation(toon_shaderProgram, "toggle_toon");
+	glUniform1i(toon_toggle_var, TOON_SHADING);
 	skybox->sendLight(toon_shaderProgram); // Send light information to toon shader
 	model->draw(toon_shaderProgram);
 	//buoy->draw(toon_shaderProgram);
@@ -548,7 +553,8 @@ void Window::display_callback(GLFWwindow* window)
 	/********** MODEL END **********/
 
 
-	/********** RENDER PARTICLES ON GAME OVER **********/
+	/********** RENDER PARTICLES **********/
+	// Explosion on game over
 	if (GAME_OVER && PRINT_GAME_OVER) {
 		glUseProgram(particle_shaderProgram);
 		explosion->draw(particle_shaderProgram);
@@ -557,7 +563,7 @@ void Window::display_callback(GLFWwindow* window)
 		glUseProgram(particle_shaderProgram);
 		water_trail->draw(particle_shaderProgram);
 	}
-	/********** END PARTICLES ON GAME OVER **********/
+	/********** END PARTICLES **********/
 
 
 	/********** RENDER TERRAIN **********/
@@ -690,6 +696,17 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
 			else {
 				std::cout << "Normals coloring off!" << std::endl;
 				SHOW_NORMALS = 0;
+			}
+		}
+
+		else if (key == GLFW_KEY_P) {
+			if (TOON_SHADING == 0) {
+				std::cout << "Toon coloring on!" << std::endl;
+				TOON_SHADING = 1;
+			}
+			else {
+				std::cout << "Toon off!" << std::endl;
+				TOON_SHADING = 0;
 			}
 		}
 
