@@ -36,6 +36,8 @@ bool SHOW_WATER = true;						// Press L to hide/unhide water
 bool DEBUG = false;							// Use 0 to toggle invincibility, disables bounds collision game over condition
 bool SPRAY_PARTICLES = false;				// Press F to spray blue particle trails from the ship
 int TOON_SHADING = true;					// Press P to toggle discretized color shading
+int SHOW_REFLECTION = 1;					// Press X to toggle reflection
+int SHOW_REFRACTION = 1;					// Press Z to toggle refraction
 
 // GAME OPTIONS (You may edit these!)
 const int ISLAND_NUM = 10;					// Default: 10
@@ -57,6 +59,8 @@ Island * tutorial_island;					// Used to stop islands from being generated on to
 GLuint normal_toggle_var;					// Sends information to terrain shader for normals coloring		
 GLuint toon_toggle_var;						// Sends information to toon shader to toggle toon coloring		
 GLuint uCam_pos;							// Sends camera pos information to shader
+GLuint sRefract;							// Toggle refraction
+GLuint sReflect;							// Toggle reflection
 GLuint uCam_look_at;						// Sends camera look_at information to shader
 glm::vec3 lastPoint;						// Holds last point for mouse/cursor movement
 bool place_island = true;					// Used to check if two islands are overlapping
@@ -116,7 +120,7 @@ void Window::initialize_objects()
 	// Water initialization
 	ocean = new Water();
 	ocean->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	ocean->scale(4000.0f, 1.0f, 4000.0f);
+	ocean->scale(4000.0f, 15.0f, 4000.0f);
 	
 	// Start clock for water waves
 	tpf = clock();
@@ -269,6 +273,8 @@ void Window::initialize_objects()
 	std::cout << "    , - Regenerate map into singular islands" << std::endl;
 	std::cout << "    G - Mute sound" << std::endl;
 	std::cout << "    P - Toggle toon coloring" << std::endl;
+	std::cout << "    Z - Toggle water refraction" << std::endl;
+	std::cout << "    X - Toggle water reflection" << std::endl;
 }
 
 // Treat this as a destructor function. Delete dynamically allocated memory here.
@@ -599,6 +605,10 @@ void Window::display_callback(GLFWwindow* window)
 	/********** RENDER WATER **********/
 	glUseProgram(water_shaderProgram);
 	// Adjust timer for input into water waves
+	sRefract = glGetUniformLocation(water_shaderProgram, "show_refract");
+	glUniform1i(sRefract, SHOW_REFRACTION);
+	sReflect = glGetUniformLocation(water_shaderProgram, "show_reflect");
+	glUniform1i(sReflect, SHOW_REFLECTION);
 	elapsedTime = (float)(clock() - tpf) / CLOCKS_PER_SEC;
 	if (elapsedTime > 13.0f && go_backwards == false) {
 		tpf = clock();
@@ -677,6 +687,15 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
 
 		else if (key == GLFW_KEY_G) {
 			sound->toggleMuteAll();
+		}
+
+		else if (key == GLFW_KEY_Y) {
+			if (mods == GLFW_MOD_SHIFT) {
+				model->translate(0.0f, 3.0f, 0.0f);
+			}
+			else {
+				model->translate(0.0f, -3.0f, 0.0f);
+			}
 		}
 
 		else if (key == GLFW_KEY_T) {
@@ -759,6 +778,23 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
 			else {
 				std::cout << "Stopped spraying particles!" << std::endl;
 				SPRAY_PARTICLES = false;
+			}
+		}
+
+		else if (key == GLFW_KEY_Z) {
+			if (SHOW_REFRACTION == 1) {
+				SHOW_REFRACTION = 0;
+			}
+			else {
+				SHOW_REFRACTION = 1;
+			}
+		}
+		else if (key == GLFW_KEY_X) {
+			if (SHOW_REFLECTION == 1) {
+				SHOW_REFLECTION = 0;
+			}
+			else {
+				SHOW_REFLECTION = 1;
 			}
 		}
 

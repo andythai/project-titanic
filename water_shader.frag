@@ -30,6 +30,9 @@ uniform sampler2D normalMap;
 uniform sampler2D reflectionTexture;
 uniform sampler2D refractionTexture;
 uniform vec3 LightDirection;
+uniform bool show_reflect;
+uniform bool show_refract;
+
 
 //light
 vec4 tangent = vec4(1.0, 0.0, 0.0, 0.0);
@@ -81,7 +84,14 @@ void main()
 
 	vec3 eye = normalize(worldPosition - camPos);
 	vec3 refraction = refract(eye, vec3(0.0, 1.0, 0.0), 0.9);
+	if (!show_refract) {
+		refraction = vec3(0.0f, 0.0f, 0.0f);
+	}
+
 	vec3 reflection = reflect(eye, vec3(0.0, 1.0, 0.0));
+	if (!show_reflect) {
+		reflection = vec3(0.0f, 0.0f, 0.0f);
+	}
 
 	// Projection Coordinates
     vec4 tmp = vec4(1.0 / pos.w);
@@ -113,7 +123,7 @@ void main()
     refractionColor += depthValue * invertedFresnel;
 
 	//color = mix(reflectionColor, refractionColor, 0.2);
-	color = reflectionColor + refractionColor;
+	color = (reflectionColor + refractionColor);
 	//color = reflectionColor;
 	//color = refractionColor;
 	//color = vec4(v_texCoord.x,0.0, v_texCoord.y, 1.0);
