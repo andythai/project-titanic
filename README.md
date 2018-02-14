@@ -8,7 +8,6 @@ Yunbo Chen<br>
 Project Titanic is a ship simulator game / program where a player controls a ship on water and attempts to avoid collision with terrain, while trying to pick up as many buoys as possible. This project has been written in C++ using the OpenGL and OpenAL libraries, with GLSL shaders.<br>
 <br>
 <b>Links:</b><br>
-Project Blog URL: http://cse167project.blogspot.com/<br>
 Demo video: https://www.youtube.com/watch?v=E_oUR8v9Y5A<br>
 <br>
 <b>Technical features:</b><br>
